@@ -6,6 +6,7 @@
 This repository contains the core MATLAB code used in my thesis “Comparing acoustical, behavioral and categorical representations of syllables in auditory cortex – Predicting two-dimensional speech morphs from high-field fMRI data”. It focuses on:
 - Creating BrainVoyager-compatible GLM design files (SDMs/MDMs) for a fast event-related 7T fMRI experiment
 - Building trial-wise behavioral predictors from post-scan vowel/speaker categorization tasks
+
 More encoding/decoding and analysis code will be added over time.
 
 ## 🎯 Features
@@ -103,9 +104,9 @@ create_sdms_mdms_glm(rootDir, subs, nRuns, nTR_run, ...
 ```
 This will write:
 
-- S<i>_RUN<r>_GLMANA_v1.sdm files to <rootDir>/MDM_SDM/
+- S(i)_RUN<r>_GLMANA_v1.sdm files to <rootDir>/MDM_SDM/
 
-- S<i>_GLMANA.mdm files linking VTC + SDM for each subject
+- S(i)_GLMANA.mdm files linking VTC + SDM for each subject
 
 4. Build behavioral predictors
 ```matlab
