@@ -164,6 +164,6 @@ Suggestions, issues, and PRs are very welcome, especially for:
 4. Open a pull request with a clear description
 
 ## 📄 License
-Choose a license that fits your needs (e.g. MIT for educational/research use).
+MIT - Free for educational use!
 
 Built with curiosity for how the brain turns continuous speech into meaningful categories.
