@@ -1,6 +1,11 @@
 # Comparing Acoustical, Behavioral and Categorical Representations of Syllables in Auditory Cortex
 **MATLAB/BrainVoyager pipeline for 7T fMRI GLM and behavioral model construction**
 
+[![MATLAB](https://img.shields.io/badge/MATLAB-R2021a%2B-orange)](https://www.mathworks.com/products/matlab.html)
+[![BrainVoyager](https://img.shields.io/badge/BrainVoyager-GLM-blue)](https://www.brainvoyager.com/)
+[![NeuroElf](https://img.shields.io/badge/NeuroElf-Toolbox-green)](https://www.neuroelf.net/)
+[![7T fMRI](https://img.shields.io/badge/7T-fMRI-red)](https://en.wikipedia.org/wiki/Functional_magnetic_resonance_imaging)
+
 ## Description
 
 This repository contains the core MATLAB code used in my thesis “Comparing acoustical, behavioral and categorical representations of syllables in auditory cortex – Predicting two-dimensional speech morphs from high-field fMRI data”. It focuses on:
