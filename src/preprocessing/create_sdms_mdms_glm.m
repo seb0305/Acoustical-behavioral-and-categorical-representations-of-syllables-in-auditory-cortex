@@ -11,34 +11,34 @@ function create_sdms_mdms_glm(rootDir, subs, nRuns, nTR_run, varargin)
 %
 % It implements the fast event-related GLM setup described in the thesis
 % (trial-wise sound regressors, convolved with a 2-gamma HRF; TR and TA
-% chosen for the 7T fMRI study).[file:1][file:2]
+% chosen for the 7T fMRI study).
 %
 % INPUTS
 %   rootDir : project root directory, containing:
 %               - 'Logfiles' folder with S<sub>_run<r>_log.txt files
-%               - subject folders 'S<sub>' with VTC and motion SDM files[file:2]
+%               - subject folders 'S<sub>' with VTC and motion SDM files
 %   subs    : vector of subject IDs, e.g. [2 3 4 5 6 7 8 9 10 11 12 13]
 %   nRuns   : scalar or vector with number of runs per subject
-%             (if scalar, same value is used for all subjects)[file:1]
+%             (if scalar, same value is used for all subjects)
 %   nTR_run : vector with number of TRs per run (length = max(nRuns)), or
-%             a matrix [nSubjects x maxRuns] if they differ per subject[file:2]
+%             a matrix [nSubjects x maxRuns] if they differ per subject
 %
 % OPTIONAL NAME-VALUE PAIRS
-%   'TR'        : repetition time in ms (default: 2500)[file:2]
+%   'TR'        : repetition time in ms (default: 2500)
 %   'TA'        : acquisition time in ms (default: 1500)
 %   'HRFRes'    : HRF oversampling factor (integer, default: 5)
 %   'AddMotion' : logical, include 6 motion regressors from BrainVoyager
-%                 3DMC SDM (default: true)[file:2]
+%                 3DMC SDM (default: true)
 %   'LogDir'    : custom logfiles directory (default: fullfile(rootDir,'Logfiles'))
 %   'SaveDir'   : custom output directory for SDM/MDM
-%                 (default: fullfile(rootDir,'MDM_SDM'))[file:2]
+%                 (default: fullfile(rootDir,'MDM_SDM'))
 %
 % LOGFILE FORMAT (per row)
 %   Column 1 : vowel morph value (0 for silence)
 %   Column 2 : speaker morph value (0 for silence)
 %   Column 3 : onset time in TR units (integer)
 %   Column 4 : target flag (1 = catch trial, 0 otherwise)
-%   Column 5 : button press flag (1 = button press, 0 otherwise)[file:2]
+%   Column 5 : button press flag (1 = button press, 0 otherwise)
 %
 % EXAMPLE
 %   rootDir = 'D:\CATMORPH';
@@ -51,7 +51,7 @@ function create_sdms_mdms_glm(rootDir, subs, nRuns, nTR_run, varargin)
 %   - MATLAB
 %   - BrainVoyager/NeuroElf toolbox providing the xff function
 %   - Logfiles and VTC/motion SDM files with the naming conventions
-%     described above.[file:2][file:1]
+%     described above.
 
 %% Parse inputs
 
@@ -61,9 +61,9 @@ p.addRequired('subs',    @(x) isnumeric(x) && isvector(x));
 p.addRequired('nRuns',   @(x) isnumeric(x) && isvector(x));
 p.addRequired('nTR_run', @(x) isnumeric(x));
 
-p.addParameter('TR',        2500, @(x) isnumeric(x) && isscalar(x));  % ms[file:2]
+p.addParameter('TR',        2500, @(x) isnumeric(x) && isscalar(x));  % ms
 p.addParameter('TA',        1500, @(x) isnumeric(x) && isscalar(x));  % ms
-p.addParameter('HRFRes',    5,    @(x) isnumeric(x) && isscalar(x));  % oversampling factor[file:2]
+p.addParameter('HRFRes',    5,    @(x) isnumeric(x) && isscalar(x));  % oversampling factor
 p.addParameter('AddMotion', true, @(x) islogical(x) && isscalar(x));
 
 p.addParameter('LogDir',  '', @(x) ischar(x) || isstring(x));
@@ -71,7 +71,7 @@ p.addParameter('SaveDir', '', @(x) ischar(x) || isstring(x));
 
 p.parse(rootDir, subs, nRuns, nTR_run, varargin{:});
 TR        = p.Results.TR;
-TA        = p.Results.TA; %#ok<NASGU> % not used directly, but kept for completeness[file:1]
+TA        = p.Results.TA; %#ok<NASGU> % not used directly, but kept for completeness
 hrfRes    = p.Results.HRFRes;
 addMotion = p.Results.AddMotion;
 
@@ -109,7 +109,7 @@ end
 %% HRF (two-gamma) construction
 
 % Parameters as in your original code:
-% pttp = 4; nttp = 12; pnr = 6; ons = 0; pdsp = 1; ndsp = 1;[file:2]
+% pttp = 4; nttp = 12; pnr = 6; ons = 0; pdsp = 1; ndsp = 1;
 pttp = 4;
 nttp = 12;
 pnr  = 6;
@@ -123,11 +123,11 @@ ndsp = 1;
 %% Predictor names and colors
 
 % In this version, we only use SOUND and TARGET, plus BASE and motion.
-PN = {'SOUND', 'TARGET', 'BASE', 'X', 'Y', 'Z', 'RX', 'RY', 'RZ'};  % names[file:2]
+PN = {'SOUND', 'TARGET', 'BASE', 'X', 'Y', 'Z', 'RX', 'RY', 'RZ'};  % names
 % Predictor colors (RGB) for first three; motion can share a neutral color.
 PC = [255 0   0;   % SOUND
       255 100 100; % TARGET
-      100 100 100];% BASE[file:2]
+      100 100 100];% BASE
 
 %% Loop over subjects
 
@@ -159,13 +159,13 @@ for iSub = 1:nSubs
         if ~exist(logFile, 'file')
             error('Logfile not found: %s', logFile);
         end
-        L = import_logfile(logFile);  % user-provided helper[file:2]
+        L = import_logfile(logFile);  % user-provided helper
 
         % Identify trial types
         target    = find(L(:,4) == 1);                   % catch trials
         nonbutton = find(L(:,5) == 0);                   % remove button-press trials
         nontarget = setdiff(1:size(L,1), target);        % remove targets
-        nonsilent = find((L(:,1) == 0) + (L(:,2) == 0) < 2); % remove silent trials[file:2]
+        nonsilent = find((L(:,1) == 0) + (L(:,2) == 0) < 2); % remove silent trials
 
         goodtrial = intersect(intersect(nontarget, nonbutton), nonsilent);
         button    = setdiff(target, find(L(:,5) == 1));
@@ -178,7 +178,7 @@ for iSub = 1:nSubs
         TARGET = zeros(1, nTimeFine);
         BUTTON = zeros(1, nTimeFine); %#ok<NASGU>
 
-        % Onsets are given in TR units in column 3; multiply by hrfRes for oversampled grid[file:2]
+        % Onsets are given in TR units in column 3; multiply by hrfRes for oversampled grid
         SOUND(GT(:,3) * hrfRes)    = 1;
         TARGET(L(target,3) * hrfRes) = 1;
 
@@ -198,10 +198,10 @@ for iSub = 1:nSubs
         % Downsample to TR resolution
         SOUND_TC  = downsample(SOUND_HRF,  hrfRes);
         TARGET_TC = downsample(TARGET_HRF, hrfRes);
-        % BUTTON_TC = downsample(BUTTON_HRF, hrfRes); % not used[file:2]
+        % BUTTON_TC = downsample(BUTTON_HRF, hrfRes); % not used
 
         % Design matrix with task predictors
-        RTCMAT = [SOUND_TC(:), TARGET_TC(:)];  % [time x 2][file:2]
+        RTCMAT = [SOUND_TC(:), TARGET_TC(:)];  % [time x 2]
 
         % SDM matrix: task predictors + baseline + optional motion (6 params)
         nTask = size(RTCMAT, 2);
@@ -222,7 +222,7 @@ for iSub = 1:nSubs
             end
             sdmmot = xff(motSDMfile);
             motMat = sdmmot.SDMMatrix;
-            % Mean-center motion regressors per column[file:2]
+            % Mean-center motion regressors per column
             motMat = bsxfun(@minus, motMat, mean(motMat, 1));
             sdmmot.ClearObject();
             clear sdmmot;
@@ -236,7 +236,7 @@ for iSub = 1:nSubs
         sdm.NrOfDataPoints      = nTR;
         sdm.SDMMatrix           = SDMMAT;
         sdm.RTCMatrix           = RTCMAT;
-        sdm.FirstConfoundPredictor = nTask + 1;  % BASE + motion as confounds[file:2]
+        sdm.FirstConfoundPredictor = nTask + 1;  % BASE + motion as confounds
 
         % Predictor names and colors (extend colors if motion is used)
         predNames = PN(1:nTask+1);
@@ -259,7 +259,7 @@ for iSub = 1:nSubs
 
         sdmFiles{r} = sdmFile;
 
-        % VTC filename for this run (adapt the pattern to your data)[file:2]
+        % VTC filename for this run (adapt the pattern to your data)
         vtcFiles{r} = fullfile(subjDir, ...
             sprintf('S%i_run%i_SCSTBL_3DMCTS_undist_TAL.vtc', subID, r));
     end

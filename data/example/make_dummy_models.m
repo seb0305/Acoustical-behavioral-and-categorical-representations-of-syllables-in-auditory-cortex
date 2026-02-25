@@ -22,7 +22,7 @@ acoustic_speaker = (sGrid - min(vals)) / (max(vals) - min(vals));      % 0..1
 % Categorical model: 3 classes as in the thesis description:
 %   low morphs   -> category -1  ("ee" / male)
 %   middle morphs-> category  0  (ambiguous)
-%   high morphs  -> category +1  ("eu" / female)[file:1]
+%   high morphs  -> category +1  ("eu" / female)
 
 categorical_vowel   = zeros(n);
 categorical_speaker = zeros(n);
